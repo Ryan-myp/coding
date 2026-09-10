@@ -197,9 +197,7 @@ python3 ~/.agents/skills/code-quality-guard/scripts/qguard.py gate . --min-score
 - run: python3 code-quality-guard/scripts/qguard.py threats src/ --json > threats.json
 ```
 
-### biz-delivery Integration
 ```python
-from integrations.biz_delivery.post_td_review import post_td_check
 result = post_td_check(td_output_dir)
 assert result["passed"], f"TD quality check failed: {result['avg_score']}"
 ```
