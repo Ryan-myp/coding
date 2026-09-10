@@ -1,0 +1,1 @@
+{"timestamp": "2026-09-10T03:17:10.347561Z", "source": "/Users/yanping.ma/.agents/skills/code-quality-guard/scripts/", "languages": ["python"], "files_analyzed": 5, "avg_score": 55.2, "critical_count": 1, "patterns_found": [], "anti_patterns_found": ["god_class", "deep_nesting", "console_log", "magic_number", "unused_import", "sql_injection_risk"]}
