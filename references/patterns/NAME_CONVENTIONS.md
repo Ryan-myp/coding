@@ -1,82 +1,120 @@
 # 命名规范库（Naming Conventions）
 
-> 统一命名风格，提升代码可读性
+> 跨语言的统一命名约定，提升代码可读性
 
-## 1. 变量命名
+---
 
-### 1.1 基本原则
+## 变量命名
+
+### 基本原则
 - 使用**有意义的名称**，让读者一眼理解用途
-- 避免缩写（除非是行业通用缩写如 `id`, `url`, `api`）
+- 避免缩写（除非是行业通用缩写如 `id`, `url`, `api`, `html`）
 - 长度与用途匹配（局部变量可以短，公共 API 要完整）
 
-### 1.2 模式
+### 各语言规范
 
-| 类型 | 规范 | 示例 |
+| 语言 | 变量 | 常量 | 布尔 | 集合 |
+|------|------|------|------|------|
+| Python | `user_count` | `MAX_RETRIES` | `is_active` | `users` |
+| TypeScript | `userCount` | `MAX_RETRIES` | `isActive` | `users` |
+| Go | `userCount` | `MaxRetries` | `isActive` | `users` |
+| Java | `userCount` | `MAX_RETRIES` | `isActive` | `users` |
+| Rust | `user_count` | `MAX_RETRIES` | `is_active` | `users` |
+
+---
+
+## 函数/方法命名
+
+### 基本原则
+- 以**动词**开头，明确表达动作
+- 返回布尔值用 `is_`/`has_`/`can_`/`should_`
+- 返回新对象用 `create_`/`build_`/`fetch_`
+- 修改状态用 `update_`/`set_`/`delete_`
+
+| 返回值 | Python | TypeScript | Go | Java | Rust |
+|--------|--------|-----------|-----|------|------|
+| 查询单个 | `get_user` | `getUser` | `GetUser` | `getUser` | `get_user` |
+| 查询列表 | `list_users` | `listUsers` | `ListUsers` | `listUsers` | `list_users` |
+| 创建 | `create_order` | `createOrder` | `CreateOrder` | `createOrder` | `create_order` |
+| 判断 | `is_valid` | `isValid` | `IsValid` | `isValid` | `is_valid` |
+| 转换 | `to_dict` | `toDict` | `ToDict` | `toDict` | `to_dict` |
+| 处理 | `process_payment` | `processPayment` | `ProcessPayment` | `processPayment` | `process_payment` |
+
+---
+
+## 类/类型命名
+
+| 语言 | 规范 | 示例 |
 |------|------|------|
-| 普通变量 | 小写+下划线 | `user_count`, `order_total` |
-| 常量 | 全大写+下划线 | `MAX_RETRY_COUNT`, `API_VERSION` |
-| 布尔变量 | `is_`/`has_`/`can_`/`should_` | `is_active`, `has_permission` |
-| 集合 | 复数形式 | `users`, `orders`, `items` |
-| 单个元素 | 单数形式 | `user`, `order` |
+| Python | PascalCase | `PaymentProcessor`, `UserRepository` |
+| TypeScript | PascalCase | `PaymentProcessor`, `UserRepository` |
+| Go | PascalCase (导出) | `PaymentProcessor`, `userRepository` (包内) |
+| Java | PascalCase | `PaymentProcessor`, `UserRepository` |
+| Rust | PascalCase | `PaymentProcessor`, `UserRepository` |
 
-### 1.3 反模式
+### 特殊后缀约定
+
+| 后缀 | 含义 | 示例 |
+|------|------|------|
+| `Handler` | 请求处理器 | `PaymentHandler` |
+| `Controller` | MVC控制器 | `UserController` |
+| `Service` | 业务逻辑层 | `OrderService` |
+| `Repository` | 数据访问层 | `UserRepository` |
+| `Factory` | 工厂类 | `PaymentFactory` |
+| `Strategy` | 策略类 | `PaymentStrategy` |
+| `Adapter` | 适配器 | `StripeAdapter` |
+| `Listener` | 事件监听器 | `OrderListener` |
+| `Middleware` | 中间件 | `AuthMiddleware` |
+| `Exception/Error` | 异常类 | `PaymentError` |
+
+---
+
+## 模块/文件命名
+
+| 语言 | 规范 | 示例 |
+|------|------|------|
+| Python | 小写+下划线 | `payment_service.py`, `user_repository.py` |
+| TypeScript | camelCase 或 kebab-case | `paymentService.ts`, `user-repository.ts` |
+| Go | 小写+下划线 | `payment_service.go` |
+| Java | PascalCase | `PaymentService.java` |
+| Rust | 小写+下划线 | `payment_service.rs` |
+
+### 测试文件命名
+
+| 语言 | 规范 | 示例 |
+|------|------|------|
+| Python | `test_<module>.py` | `test_payment_service.py` |
+| TypeScript | `<module>.test.ts` 或 `<module>.spec.ts` | `payment.service.test.ts` |
+| Go | `<module>_test.go` | `payment_service_test.go` |
+| Java | `<ClassName>Test.java` | `PaymentServiceTest.java` |
+| Rust | `<module>_test.rs` 或 test 模块内 | `mod test { }` |
+
+---
+
+## 反模式（Bad Naming）
 
 ```python
 # ❌ 坏
 x = get_user(123)
 flag = True
 lst = [1, 2, 3]
+temp = do_something()
 
 # ✅ 好
 user = get_user(user_id=123)
 is_authenticated = True
 user_ids = [1, 2, 3]
+result = process_payment(order)
 ```
 
-## 2. 函数命名
+```typescript
+// ❌ 坏
+let d = getData();
+let r = result;
+let b = true;
 
-### 2.1 基本原则
-- 以**动词**开头，明确表达动作
-- 返回布尔值用 `is_`/`has_`/`can_`
-- 返回新对象用 `create_`/`build_`/`fetch_`
-- 修改状态用 `update_`/`set_`/`delete_`
-- 无返回值（副作用）用 `process_`/`handle_`/`send_`
-
-### 2.2 模式
-
-| 返回值 | 命名前缀 | 示例 |
-|--------|---------|------|
-| 查询单个 | `get_`/`find_`/`fetch_` | `get_user_by_id`, `find_active_orders` |
-| 查询列表 | `list_`/`search_` | `list_users`, `search_products` |
-| 创建 | `create_`/`build_` | `create_order`, `build_report` |
-| 更新 | `update_`/`modify_` | `update_user_profile` |
-| 删除 | `delete_`/`remove_` | `delete_order` |
-| 判断 | `is_`/`has_`/`can_` | `is_valid`, `has_permission` |
-| 转换 | `to_`/`convert_`/`serialize_` | `to_dict`, `convert_to_json` |
-| 处理 | `process_`/`handle_` | `process_payment`, `handle_request` |
-
-## 3. 类命名
-
-### 3.1 基本原则
-- 使用**名词**或**名词短语**
-- 首字母大写（PascalCase）
-- 避免动词前缀（那是函数的职责）
-- Interface/Abstract 类可加 `I` 前缀或 `-able`/-`ible` 后缀
-
-### 3.2 模式
-
-| 类型 | 命名方式 | 示例 |
-|------|---------|------|
-| 普通类 | PascalCase | `UserRepository`, `PaymentProcessor` |
-| 异常类 | 名词 + `Error`/`Exception` | `NotFoundError`, `PaymentError` |
-| 接口 | I前缀 或 -able后缀 | `IRepository`, `Serializable` |
-| 工厂 | 名词 + `Factory` | `PaymentFactory`, `UserFactory` |
-| 处理器 | 名词 + `Handler` | `RequestHandler`, `ErrorHandler` |
-| 监听器 | 名词 + `Listener` | `OrderListener`, `EventSubscriber` |
-| 适配器 | 名词 + `Adapter` | `PaymentAdapter`, `JsonAdapter` |
-
-## 4. 模块/文件命名
-
-- 小写+下划线：`payment_service.py`, `user_repository.py`
-- 包名：`payment/`, `users/`, `common/`
-- 测试文件：`test_<模块名>.py` 或 `<模块名>_test.py`
+// ✅ 好
+let userData = fetchUserData(userId);
+let paymentResult = processPayment(order);
+let isActive = checkAccountStatus(userId);
+```

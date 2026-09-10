@@ -1,226 +1,167 @@
 ---
 name: code-quality-guard
-description: "AI 代码质量守护专家 — 集成架构师/工程师/安全专家视角，为 Codex/Cursor/Claude 等 Agent 提供代码质量门禁、架构审查、安全扫描与持续蒸馏进化能力"
-version: 1.0.0
+description: "AI 代码质量守护专家 — 多语言通用的代码审查、架构评估、安全审计与持续蒸馏进化。集成 Architect/Engineer/Security/Perf 四角色联合审查，支持 Codex/Cursor/Claude/Gemini/OpenCode 等所有 AI 编码 Agent"
+version: 2.0.0
 author: ryan
 created: 2025-09-10
 platforms: [linux, macos, windows]
-tags: [code-quality, architecture, security, review, maintainability, distillation, agent]
+tags: [code-quality, architecture, security, review, maintainability, distillation, agent, multi-language, tdd]
+compatibility: "Python 3.8+, Node.js 18+, 任何支持 AGENTS.md/SKILL.md 的 Agent 平台"
+metadata:
+  review_axes: 5
+  languages_supported: 6
+  roles: 4
+  distillation: true
 ---
 
-# Code Quality Guard v1.0 — AI 代码质量守护专家
+# Code Quality Guard v2.0 — AI 代码质量守护专家
 
-> 让所有 AI 编码 Agent（Codex / Cursor / Claude / GitHub Copilot）写出统一高质量代码
+> 让所有 AI 编码 Agent 写出统一高质量代码，无论使用什么语言
 
-## 🎯 核心目标
+## 🎯 问题与定位
 
-解决 AI Agent 写代码"功能可用但维护困难"的问题：
-- 架构设计随意，缺乏分层与解耦
-- 硬编码泛滥，配置与逻辑混杂
-- 可读性差，命名混乱，注释缺失
-- 安全性漏洞，注入、权限、数据泄露
-- 可测试性低，难以覆盖边界场景
-- 扩展性差，每次改动都是大改
+当前 AI Agent 写代码的通病：
+- **功能可用但维护灾难** — 架构随意、硬编码泛滥、可读性差
+- **质量千差万别** — 不同 Agent、不同提示词风格导致输出参差不齐
+- **安全漏洞频出** — SQL 注入、密钥硬编码、未验证输入
+- **缺乏统一标准** — 每个团队/每个人自己定义规范，难以规模化
 
-## 📐 角色体系
+本 Skill 提供**一套统一的、语言无关的、可进化的代码质量标准**，所有 Agent 装了这个 Skill 后，写出的代码质量趋于一致。
 
-本 Skill 整合三个专业角色，每个角色有独立的检查清单：
+## 🏛️ 四角色联合审查体系
 
-| 角色 | 职责 | 关注维度 |
-|------|------|---------|
-| **Architect** | 架构设计审查 | 分层、解耦、模式、扩展点 |
-| **Engineer** | 代码工程化审查 | 可读性、可维护性、可测试性 |
-| **Security** | 安全合规审查 | 注入、权限、数据安全、依赖安全 |
+| 角色 | 职责 | 关注维度 | 审查入口 |
+|------|------|---------|---------|
+| **Architect** 🏗️ | 架构设计审查 | 分层、解耦、模式、扩展点、变更影响面 | `references/languages/architecture-*.md` |
+| **Engineer** 👷 | 工程化审查 | 可读性、命名、DRY、注释、错误处理 | `references/languages/engineering-*.md` |
+| **Security** 🔒 | 安全合规审查 | STRIDE威胁建模、OWASP Top10、依赖安全 | `references/languages/security-*.md` |
+| **Performer** ⚡ | 性能审查 | N+1查询、内存泄漏、算法复杂度、缓存策略 | `references/languages/performance-*.md` |
 
-使用方式：当 Agent 完成代码编写后，自动触发三角色联合审查。
-
-## 🔄 工作流
+## 🔄 完整工作流（五阶段）
 
 ```
-Agent 写代码
-    │
-    ▼
-┌──────────────────────────────┐
-│  Phase 1: 编码前架构指引       │  ← Architect 前置建议
-│  - 推荐设计模式               │
-│  - 分层建议                   │
-│  - 扩展点标记                 │
-└──────────────────────────────┘
-    │
-    ▼
-┌──────────────────────────────┐
-│  Phase 2: 编码中实时规范       │  ← Engineer 实时提醒
-│  - 命名规范                   │
-│  - 函数职责单一               │
-│  - 避免硬编码                 │
-└──────────────────────────────┘
-    │
-    ▼
-┌──────────────────────────────┐
-│  Phase 3: 完成后全面审查       │  ← 三角色联合审查
-│  - Architect: 架构合理性      │
-│  - Engineer: 代码质量         │
-│  - Security: 安全漏洞         │
-└──────────────────────────────┘
-    │
-    ▼
-┌──────────────────────────────┐
-│  Phase 4: 蒸馏进化             │  ← 从优质代码中学习
-│  - 提取优秀模式到 reference   │
-│  - 积累 Bad Smell 案例库      │
-│  - 持续迭代检查清单           │
-└──────────────────────────────┘
+┌─────────────────────────────────────────────────────────────────┐
+│  Phase 1: 编码前 — 架构指引                                      │
+│  - 需求分析 → 推荐设计模式                                       │
+│  - 分层建议 → 扩展点标记                                         │
+│  - 技术选型建议                                                   │
+└─────────────────────────────────────────────────────────────────┘
+                           │
+                           ▼
+┌─────────────────────────────────────────────────────────────────┐
+│  Phase 2: 编码中 — 实时规范提醒                                   │
+│  - 命名规范提醒                                                  │
+│  - 函数职责单一检查                                              │
+│  - 避免反模式                                                    │
+└─────────────────────────────────────────────────────────────────┘
+                           │
+                           ▼
+┌─────────────────────────────────────────────────────────────────┐
+│  Phase 3: TDD — 测试先行                                         │
+│  - RED: 先写失败测试                                             │
+│  - GREEN: 最小实现让测试通过                                     │
+│  - REFACTOR: 在测试保护下重构                                    │
+└─────────────────────────────────────────────────────────────────┘
+                           │
+                           ▼
+┌─────────────────────────────────────────────────────────────────┐
+│  Phase 4: 完成后 — 四角色联合审查                                 │
+│  - Architect: 架构合理性 + 变更影响面                            │
+│  - Engineer: 可读性 + 可维护性 + 可测试性                        │
+│  - Security: STRIDE威胁建模 + OWASP Top10                        │
+│  - Performer: 性能瓶颈 + 资源泄漏                                │
+└─────────────────────────────────────────────────────────────────┘
+                           │
+                           ▼
+┌─────────────────────────────────────────────────────────────────┐
+│  Phase 5: 蒸馏进化                                               │
+│  - 优质代码 → 提取模式入库                                        │
+│  - 问题代码 → 提取反模式入库                                      │
+│  - 检查清单迭代更新                                               │
+└─────────────────────────────────────────────────────────────────┘
 ```
 
 ## 🚀 快速使用
 
-### 方式一：直接加载审查
+### 审查已有代码
 
 ```
-请按照 code-quality-guard 的标准审查以下代码：
-[粘贴代码或指定文件路径]
+按照 code-quality-guard 标准审查以下代码：
+[代码片段或文件路径]
+
+要求：
+1. 四角色联合审查
+2. 按严重程度分级（Critical / Required / Optional / Nit）
+3. 给出具体修复建议
+4. 输出质量评分
 ```
 
-### 方式二：编码前架构指引
+### 编码前架构指引
 
 ```
-在写 [某个功能] 之前，请先按照 code-quality-guard 的架构师角色给出设计建议
+准备写 [某个功能]，请先按 code-quality-guard 的 Architect 角色：
+1. 分析需求关键点
+2. 推荐设计模式
+3. 给出分层建议
+4. 标记扩展点
 ```
 
-### 方式三：完整流水线
+### 安全审计
 
 ```
-使用 code-quality-guard 全流程处理：
-1. 分析 PRD/需求
-2. 给出架构设计建议
-3. 生成代码时遵循工程规范
-4. 完成后三角色联合审查
-5. 蒸馏学到的模式
+按 code-quality-guard 的 Security 角色进行 STRIDE 威胁建模：
+[代码或功能描述]
 ```
 
-## 📋 审查维度详解
+### TDD 指导
 
-### Architect 角色检查清单
+```
+按 code-quality-guard 的 TDD 流程实现 [功能]：
+1. 先写 RED 测试
+2. 再写最小 GREEN 实现
+3. 最后 REFACTOR
+```
 
-<details>
-<summary>架构分层</summary>
+### 蒸馏进化
 
-- [ ] 是否存在清晰的分层（Controller → Service → Repository/DAO）
-- [ ] 各层之间是否单向依赖
-- [ ] 是否避免跨层调用
-- [ ] 是否有明确的边界上下文（Bounded Context）
-- [ ] 是否使用了合适的抽象层次
-</details>
+```
+用 code-quality-guard 的蒸馏模式分析这个代码库：
+[仓库路径]
+提取最佳实践和反模式，更新模式库。
+```
 
-<details>
-<summary>设计模式</summary>
+## 📊 五轴质量评分体系
 
-- [ ] 是否使用了合适的设计模式（Strategy/Factory/Observer/Repository 等）
-- [ ] 是否避免了上帝类（God Class）
-- [ ] 是否符合单一职责原则（SRP）
-- [ ] 是否符合依赖倒置原则（DIP）
-- [ ] 扩展点是否通过接口/抽象暴露
-</details>
+每次审查覆盖五个维度，每个维度独立评分：
 
-<details>
-<summary>解耦与内聚</summary>
+| 轴 | 权重 | 满分 | 关键检查项 |
+|----|------|------|-----------|
+| **Correctness** ✅ | 20% | 20 | 边界条件、错误处理、逻辑正确性 |
+| **Readability** 📖 | 20% | 20 | 命名、复杂度、注释、DRY |
+| **Architecture** 🏗️ | 25% | 25 | 分层、解耦、模式、扩展性 |
+| **Security** 🔒 | 20% | 20 | 输入验证、认证授权、数据安全 |
+| **Performance** ⚡ | 15% | 15 | 算法复杂度、资源管理、缓存 |
 
-- [ ] 模块内高内聚，模块间低耦合
-- [ ] 是否存在循环依赖
-- [ ] 是否使用了依赖注入
-- [ ] 硬编码的业务逻辑是否提取为配置
-</details>
+**综合分级**：
 
-### Engineer 角色检查清单
+| 分数 | 等级 | 含义 | 行动 |
+|------|------|------|------|
+| 90-100 | 🟢 Excellent | 可直接合入 | 可作为模式蒸馏入库 |
+| 70-89 | 🟡 Good | 小问题需修复 | 修复后合入 |
+| 50-69 | 🟠 Fair | 需要较大改进 | 必须修复 Critical 后重审 |
+| 0-49 | 🔴 Poor | 不合格，需要重写 | 驳回重做 |
 
-<details>
-<summary>可读性</summary>
-
-- [ ] 变量/函数命名是否语义清晰
-- [ ] 函数长度是否合理（建议 < 50 行）
-- [ ] 是否有必要的注释说明"为什么"而非"是什么"
-- [ ] 是否存在魔法数字/字符串
-- [ ] 代码格式化是否一致
-</details>
-
-<details>
-<summary>可维护性</summary>
-
-- [ ] 错误处理是否完善
-- [ ] 日志是否合理（不泄露敏感信息）
-- [ ] 配置是否参数化/外部化
-- [ ] 是否存在重复代码（DRY 原则）
-- [ ] 是否遵循了已有的代码风格
-</details>
-
-<details>
-<summary>可测试性</summary>
-
-- [ ] 函数是否有明确的输入输出
-- [ ] 是否避免了全局状态
-- [ ] 依赖是否可 Mock
-- [ ] 边界条件是否覆盖
-- [ ] 是否存在难以测试的耦合
-</details>
-
-### Security 角色检查清单
-
-<details>
-<summary>输入验证</summary>
-
-- [ ] 所有外部输入是否经过验证/ sanitization
-- [ ] SQL 注入防护（参数化查询）
-- [ ] XSS 防护
-- [ ] 命令注入防护
-</details>
-
-<details>
-<summary>权限与安全</summary>
-
-- [ ] 是否做了鉴权检查
-- [ ] 敏感数据是否加密存储/传输
-- [ ] 是否有权限校验（RBAC/ABAC）
-- [ ] API 是否有限流/防重放
-</details>
-
-<details>
-<summary>数据安全</summary>
-
-- [ ] 日志中是否包含敏感信息
-- [ ] 密钥是否硬编码
-- [ ] 是否有数据泄露风险
-- [ ] 依赖包是否存在已知漏洞
-</details>
-
-## 🧪 质量评分
-
-每次审查输出一个综合评分（0-100）：
-
-| 维度 | 权重 | 评分标准 |
-|------|------|---------|
-| 架构合理性 | 30% | 分层清晰=10, 基本合理=6, 混乱=2 |
-| 可读性 | 20% | 命名清晰+注释完善=10, 一般=5, 混乱=2 |
-| 可维护性 | 20% | 配置外化+错误处理完善=10, 一般=5, 差=2 |
-| 可测试性 | 10% | 无全局状态+依赖可Mock=10, 一般=5, 差=2 |
-| 安全性 | 20% | 无漏洞=10, 有低风险=5, 有高危=0 |
-
-**分级标准**：
-- 🟢 90-100：优秀，可直接合入
-- 🟡 70-89：良好，有小问题需修复
-- 🟠 50-69：一般，需要较大改进
-- 🔴 0-49：不合格，需要重写
-
-## 🔬 蒸馏进化机制
+## 🔬 蒸馏进化机制（核心创新）
 
 ### 什么是蒸馏？
 
-从已有的优质代码中自动提取最佳实践，反馈到检查清单和模式库，使 Skill 持续进化。
+从历史审查结果和优质代码中自动提取最佳实践，反馈到检查清单和模式库，使 Skill 持续进化。
 
 ### 蒸馏触发条件
 
-1. **用户主动触发**：`请用蒸馏模式分析这个代码库`
-2. **审查通过后**：高分代码自动进入模式库
-3. **定时蒸馏**：定期扫描历史审查结果，提取新模式
+1. **高分代码** — 评分 ≥ 90 的代码自动进入模式候选
+2. **用户主动触发** — "用蒸馏模式分析这个代码库"
+3. **定时蒸馏** — 定期扫描历史审查记录，提取新模式
 
 ### 蒸馏流程
 
@@ -228,111 +169,83 @@ Agent 写代码
 优质代码样本
     │
     ▼
-┌─────────────────┐
-│ 模式提取        │  ← LLM 分析代码中的优秀实践
-│ - 设计模式      │
-│ - 命名规范      │
-│ - 错误处理模式  │
-│ - 安全模式      │
-└─────────────────┘
+┌──────────────────────────────────────┐
+│ Step 1: 模式识别                      │
+│ - 识别设计模式                        │
+│ - 提取命名约定                        │
+│ - 发现安全最佳实践                    │
+│ - 定位性能优化技巧                    │
+└──────────────────────────────────────┘
     │
     ▼
-┌─────────────────┐
-│ 模式入库        │  ← 追加到 references/patterns/
-│ - 更新 patterns │
-│ - 更新 bad-smells│
-│ - 版本化记录    │
-└─────────────────┘
+┌──────────────────────────────────────┐
+│ Step 2: 反模式识别                    │
+│ - 识别硬编码                          │
+│ - 发现上帝类/面条代码                 │
+│ - 定位安全漏洞模式                    │
+│ - 检测性能反模式                      │
+└──────────────────────────────────────┘
     │
     ▼
-┌─────────────────┐
-│ 检查清单迭代    │  ← 根据新模式更新审查规则
-│ - 新增检查项    │
-│ - 调整权重      │
-│ - A/B 验证效果  │
-└─────────────────┘
+┌──────────────────────────────────────┐
+│ Step 3: 模式入库                       │
+│ - 追加到 references/patterns/        │
+│ - 标注语言适用性                      │
+│ - 添加代码示例                        │
+└──────────────────────────────────────┘
+    │
+    ▼
+┌──────────────────────────────────────┐
+│ Step 4: 检查清单迭代                  │
+│ - 新增检查项                          │
+│ - 调整权重                            │
+│ - 版本化记录变更                      │
+└──────────────────────────────────────┘
 ```
 
-### 蒸馏输出物
+### 蒸馏产物
 
-| 文件 | 用途 |
+| 文件 | 说明 |
 |------|------|
-| `references/patterns/DESIGN_PATTERNS.md` | 设计模式库 |
+| `references/patterns/DESIGN_PATTERNS.md` | 设计模式库（按语言分类） |
 | `references/patterns/NAME_CONVENTIONS.md` | 命名规范库 |
-| `references/bad-smells/HARDCODE.md` | 硬编码反模式案例 |
-| `references/bad-smells/GOD_CLASS.md` | 上帝类反模式案例 |
-| `references/security/CHECKLIST.md` | 安全漏洞模式库 |
-| `distillation/log.md` | 蒸馏历史记录 |
+| `references/patterns/ERROR_HANDLING.md` | 错误处理模式库 |
+| `references/anti-patterns/HARDCODE.md` | 硬编码反模式 |
+| `references/anti-patterns/GOD_CLASS.md` | 上帝类反模式 |
+| `references/anti-patterns/SPAGHETTI.md` | 面条代码反模式 |
+| `distillation/patterns.json` | 结构化模式索引 |
+| `distillation/history.jsonl` | 蒸馏历史记录 |
 
-## 📂 目录结构
+## 🌐 多语言支持
 
-```
-code-quality-guard/
-├── SKILL.md                          # 本文件
-├── references/
-│   ├── architect-checklist.md        # 架构师详细检查清单
-│   ├── engineer-checklist.md         # 工程师详细检查清单
-│   ├── security-checklist.md         # 安全专家详细检查清单
-│   ├── patterns/                     # 模式库（蒸馏产出）
-│   │   ├── DESIGN_PATTERNS.md
-│   │   ├── NAME_CONVENTIONS.md
-│   │   └── ANTI_PATTERNS.md
-│   └── bad-smells/                   # 反模式案例库（蒸馏产出）
-│       ├── HARDCODE.md
-│       ├── GOD_CLASS.md
-│       └── SPAGHETTI_CODE.md
-├── scripts/
-│   ├── score.py                      # 质量评分脚本
-│   ├── distill.py                    # 蒸馏引擎
-│   └── generate_report.py            # 审查报告生成
-└── templates/
-    ├── review-report.md              # 审查报告模板
-    └── distillation-log.md           # 蒸馏日志模板
-```
+本 Skill 语言无关，但针对以下语言提供专项检查清单：
 
-## 📊 审查报告格式
+| 语言 | 文件 | 关键差异 |
+|------|------|---------|
+| Python | `references/languages/architecture-python.md` | 动态类型、GIL、装饰器模式 |
+| TypeScript/JS | `references/languages/architecture-ts.md` | 类型系统、ESM/CJS、框架约束 |
+| Go | `references/languages/architecture-go.md` | 并发模型、error handling、接口设计 |
+| Java | `references/languages/architecture-java.md` | Spring生态、泛型、ORM |
+| Rust | `references/languages/architecture-rust.md` | 所有权、零成本抽象、模式匹配 |
+| 通用 | `references/languages/architecture-universal.md` | 所有语言通用的架构原则 |
 
-```markdown
-# 代码质量审查报告
+## 📐 代码变更规模控制
 
-## 基本信息
-- 审查时间：2025-09-10 14:30:00
-- 审查文件：src/service/payment.py
-- 审查者：Code Quality Guard (Architect + Engineer + Security)
+| 变更大小 | 建议 | 处理方式 |
+|---------|------|---------|
+| ≤100 行 | 理想大小 | 一次 Review |
+| 100-300 行 | 可接受（单一逻辑变更） | 一次 Review |
+| 300-1000 行 | 偏大 | 建议拆分 |
+| >1000 行 | 过大 | 必须拆分 |
 
-## 综合评分：🟢 85/100
+**拆分策略**：
 
-| 角色 | 分数 | 问题数 | 警告数 |
-|------|------|--------|--------|
-| Architect | 28/30 | 0 | 1 |
-| Engineer | 16/20 | 1 | 2 |
-| Security | 18/20 | 0 | 1 |
-
-## 发现的问题
-
-### 🔴 严重（必须修复）
-1. [Architect] 第 45 行：硬编码的支付网关 URL
-   ```
-   GATEWAY_URL = "https://pay.example.com/api"
-   ```
-   **建议**：移至配置文件 `settings.yaml`
-
-### 🟡 警告（建议修复）
-2. [Engineer] 第 12 行：函数 `process_payment` 超过 50 行
-   **建议**：拆分为 `validate_input` + `call_gateway` + `handle_response`
-
-3. [Security] 第 78 行：日志中打印了 card_number
-   **建议**：使用 `****1234` 脱敏
-
-## 亮点
-- ✅ 良好的异常处理结构
-- ✅ 使用了 Strategy 模式处理不同支付方式
-
-## 蒸馏建议
-此代码可作为以下模式的示例入库：
-- 支付网关调用模式
-- 敏感数据脱敏模式
-```
+| 策略 | 适用场景 |
+|------|---------|
+| Stack | 有顺序依赖的变更 |
+| Horizontal | 需要先建共享层 |
+| Vertical | 按功能模块拆分 |
+| By file group | 跨领域关注点 |
 
 ## 🔗 与其他 Skill 的集成
 
@@ -340,9 +253,49 @@ code-quality-guard/
 
 | 集成 Skill | 协作方式 |
 |-----------|---------|
-| `biz-delivery` | TD 阶段由 Architect 审查技术方案，实现阶段由 Engineer 审查代码 |
-| `ryan-expert-skills` | 利用已有架构知识增强审查深度 |
-| 各平台 API Skills | 对生成的 API 代码进行安全审查 |
+| `biz-delivery` | TD 阶段 Architect 审查技术方案，实现阶段四角色联合审查 |
+| `ryan-expert-skills` | 利用架构专家知识增强审查深度 |
+| `dv360-expert` / `google-ads-api-expert` | 对 API 集成代码进行安全和性能审查 |
+| 自建项目 Skill | 根据项目特点定制检查清单权重 |
+
+## 📂 目录结构
+
+```
+code-quality-guard/
+├── SKILL.md                          # 本文件（主入口）
+├── references/
+│   ├── patterns/                     # 模式库（蒸馏产出）
+│   │   ├── DESIGN_PATTERNS.md
+│   │   ├── NAME_CONVENTIONS.md
+│   │   └── ERROR_HANDLING.md
+│   ├── anti-patterns/                # 反模式库
+│   │   ├── HARDCODE.md
+│   │   ├── GOD_CLASS.md
+│   │   └── SPAGHETTI.md
+│   ├── languages/                    # 语言专项检查清单
+│   │   ├── architecture-universal.md
+│   │   ├── architecture-python.md
+│   │   ├── architecture-ts.md
+│   │   ├── architecture-go.md
+│   │   ├── architecture-java.md
+│   │   ├── architecture-rust.md
+│   │   ├── security-universal.md
+│   │   ├── performance-universal.md
+│   │   └── engineering-universal.md
+│   └── schemas/                      # JSON Schema 定义
+│       └── review-result.schema.json
+├── scripts/
+│   ├── distill.py                    # 蒸馏引擎
+│   ├── score.py                      # 五轴评分引擎
+│   ├── report.py                     # 报告生成器
+│   ├── threat_model.py               # STRIDE 威胁建模
+│   └── diff_analyzer.py              # 变更影响面分析
+├── templates/
+│   ├── review-report.md              # 审查报告模板
+│   └── distillation-log.md           # 蒸馏日志模板
+└── hooks/
+    └── pre-commit.sh                 # Git hooks 示例
+```
 
 ## 🚢 部署与发布
 
@@ -354,14 +307,13 @@ cd coding/code-quality-guard
 # 安装到 pi
 ln -s $(pwd) ~/.agents/skills/code-quality-guard
 
-# 验证
-pi --list-skills | grep code-quality-guard
+# 验证安装
+ls ~/.agents/skills/ | grep code-quality-guard
 ```
 
-## 📝 贡献指南
+## 🤝 贡献指南
 
-欢迎提交 PR！审查标准：
 1. 代码符合本 Skill 的检查清单
-2. 新增模式/反模式需附实际代码示例
+2. 新增模式/反模式需附多语言代码示例
 3. 蒸馏功能需记录来源和提取逻辑
-4. 测试用例覆盖率 ≥ 80%
+4. 语言专项检查清单需覆盖至少 2 种语言示例
