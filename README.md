@@ -1,173 +1,149 @@
-# Code Quality Guard v5.0 — 多语言 AI 代码质量守护系统
+# biz-delivery
 
-一个跨平台的代码质量守护工具，支持意图识别、五轴评分、STRIDE 威胁建模和设计模式蒸馏。
+> **研发流程 Skill 标准化系统** — 确定性、规则驱动、不依赖 LLM
+
+[![Python](https://img.shields.io/badge/Python-3.9+-blue.svg)](https://www.python.org/)
+[![License](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
+[![Tests](https://github.com/Ryan-myp/biz-delivery/actions/workflows/ci.yml/badge.svg)](https://github.com/Ryan-myp/biz-delivery/actions)
+
+---
+
+## 📋 项目定位
+
+biz-delivery 是一个**研发流程 Skill 标准化系统**。
+
+通过**确定性、规则驱动**的 Skill，将 PRD 审查、技术方案生成、任务规划、测试用例生成等环节标准化。
+
+### 核心理念
+
+```
+Skill = 确定性逻辑 + 模板填充 + 规则检查
+       ↑
+    不依赖 LLM
+```
+
+---
+
+## 🎯 六大核心 Skill
+
+| Skill | 功能 | 实现方式 | 依赖 LLM |
+|-------|------|---------|---------|
+| **PRD Review** | 自主发现 PRD 问题 | 规则检查 | ❌ |
+| **TD** | 根据 PRD 写技术方案 | 模板填充 | ❌ |
+| **Task Planning** | 生成执行计划 | 规则分解 | ❌ |
+| **Agent Execution** | 执行任务计划 | 任务调度 | ⚠️ 可选 |
+| **Test Case** | 生成测试用例 | 模板生成 | ❌ |
+| **Automated Testing** | 自动化测试 | 脚本执行 | ❌ |
+
+---
 
 ## 🚀 快速开始
 
-### 在 Pi 中使用
-
-```
-/quality-check          # 运行质量门禁
-/quality-review src/    # 五轴评分审查
-/threat-model           # STRIDE 威胁建模
-/learn-patterns         # 从项目学习最佳实践
-/intent-detect "你的prompt"  # 测试意图检测
-```
-
-### 在终端使用
+### 安装依赖
 
 ```bash
-# 智能触发
-bash scripts/qguard-auto.sh trigger "实现用户认证API"
-
-# 意图检测
-python3 scripts/intent_detector.py "实现用户认证API" --verbose
-
-# 五轴评分
-python3 scripts/qguard.py review src/
-
-# 威胁建模
-python3 scripts/qguard.py threats src/ --json
-
-# 质量门禁
-python3 scripts/qguard.py gate . --min-score 70
-
-# 模式蒸馏
-python3 scripts/qguard.py distill . --output patterns.json
+pip install -r requirements.txt
 ```
 
-## 🎯 核心特性
+### 配置 Profile
 
-### 1. 智能意图识别
-- 支持中英双语
-- 检测 6 种意图：代码编写、代码审查、安全审查、调试修复、重构优化、测试
-- 自动注入对应的质量规则
-
-### 2. 五轴评分系统
-| 维度 | 权重 | 关注点 | 最低分 |
-|------|------|--------|--------|
-| Correctness | 20% | 错误处理、边界条件 | 15/20 |
-| Readability | 20% | 命名、函数长度 | 15/20 |
-| Architecture | 25% | 分层、耦合、上帝类 | 18/25 |
-| Security | 20% | 密钥、注入、认证 | 15/20 |
-| Performance | 15% | N+1查询、超时 | 10/15 |
-
-### 3. 实时质量守护
-- 代码写入时弹出提醒
-- Git commit 前自动运行门禁
-- PR/Merge 时自动检查
-
-### 4. 多 Agent 支持
-- Pi (当前环境)
-- Claude Code
-- OpenAI Codex
-- Cursor
-- GitHub Copilot
-
-### 5. 学习进化
-- 从高质量代码中学习设计模式
-- 记录蒸馏历史
-- 持续优化规则
-
-## 📦 安装
-
-### 一键安装所有 Agent
 ```bash
-bash scripts/install_all_agents.sh
+python3 scripts/init_profile.py --lang go
 ```
 
-### 手动安装
+### 运行 Skill
+
 ```bash
-# Pi
-cp ~/.agents/skills/code-quality-guard/scripts/qguard-auto.sh ~/.local/bin/
+# 只运行 PRD Review
+python3 scripts/run_pipeline.py --mode review --prd prd/your_prd.md
 
-# Claude Code
-mkdir -p ~/.claude/skills/code-quality-guard
-cp ~/.agents/skills/code-quality-guard/SKILL.md ~/.claude/skills/code-quality-guard/
+# 只生成技术方案
+python3 scripts/run_pipeline.py --mode td --prd prd/your_prd.md
 
-# Codex
-mkdir -p ~/.codex/skills/code-quality-guard
-cp ~/.agents/skills/code-quality-guard/SKILL.md ~/.codex/skills/code-quality-guard/
+# 只生成测试用例
+python3 scripts/run_pipeline.py --mode test --prd prd/your_prd.md
 
-# Cursor
-mkdir -p ~/.cursor/rules
-cp ~/.agents/skills/code-quality-guard/references/quality-rules.md ~/.cursor/rules/code-quality-guard.md
+# 完整流程
+python3 scripts/run_pipeline.py --mode full --prd prd/your_prd.md
 ```
 
-## 📊 文件结构
+---
+
+## 📁 项目结构
 
 ```
-code-quality-guard/
-├── README.md                    # 本文件
-├── v5-improvements.md           # v5 改进说明
-├── AUTO_TRIGGER_GUIDE.md        # 自动触发指南
-├── SKILL.md                     # 主技能文档
-├── scripts/
-│   ├── qguard.py                # 统一 CLI
-│   ├── qguard-auto.sh           # 智能触发脚本
-│   ├── intent_detector.py       # 意图检测器
-│   ├── install_all_agents.sh    # 一键安装脚本
-│   ├── ast_analyzer.py          # AST 分析器
-│   ├── score_engine.py          # 五轴评分引擎
-│   ├── threat_modeler.py        # STRIDE 威胁建模
-│   ├── distiller.py             # 模式蒸馏器
-│   ├── metrics_dashboard.py     # 质量趋势仪表板
-│   └── badge_generator.py       # 徽章生成器
-├── playbooks/                   # 操作手册
-│   ├── tdd.sh                   # TDD 工作流
-│   ├── review.sh                # 代码审查流程
-│   ├── threat-model.sh          # 威胁建模
-│   └── migrate.sh               # 迁移安全
-├── ci/
-│   └── quality-check.yml        # GitHub Actions
-├── policies/
-│   └── gate.json                # 门禁配置
-├── integrations/
-└── distillation/                # 蒸馏结果
-    ├── patterns.json
-    └── history.jsonl
+biz-delivery/
+├── skills/                    # Skill 实现（确定性）
+│   ├── base.py               # Skill 基类
+│   ├── prd_review/           # ✅ PRD 审查 Skill
+│   ├── technical_design/     # ✅ 技术方案 Skill
+│   ├── task_planning/        # ✅ 任务规划 Skill
+│   ├── agent_execution/      # ⚠️ Agent 执行 Skill
+│   ├── test_case/            # ✅ 测试用例 Skill
+│   ├── automated_testing/    # ✅ 自动化测试 Skill
+│   └── orchestrator.py       # Skill 编排器
+├── scripts/                   # 核心引擎
+│   ├── review_engine.py      # 审查引擎（兼容旧版）
+│   ├── td_engine.py          # 技术方案引擎（兼容旧版）
+│   ├── test_engine.py        # 测试用例引擎（兼容旧版）
+│   └── agent/                # Agent 模块
+├── hooks/                     # Hook 扩展点
+├── templates/                 # Jinja2 模板
+├── profiles/                  # 业务 Profile
+├── prd/                       # PRD 文档
+├── delivery/                  # 交付产物
+└── tests/                     # 测试用例（287 tests）
 ```
 
-## 🔧 配置
+---
 
-### 质量门禁阈值
-编辑 `policies/gate.json`:
-```json
-{
-  "quality_gate": {
-    "min_composite_score": 70,
-    "min_axis_scores": {
-      "security": 15,
-      "architecture": 18
-    },
-    "critical_findings": ["hardcoded_secret", "sql_injection", "eval_usage"]
-  }
-}
+## 📖 详细文档
+
+- [项目定位](POSITIONING.md) - 核心理念和使用场景
+- [Skill 设计原则](skills/DESIGN.md) - 为什么不依赖 LLM
+- [Skill 架构](SKILL_ARCHITECTURE.md) - 各 Skill 详细设计
+- [快速开始](QUICKSTART.md) - 上手指南
+- [API 参考](references/api_reference.md) - 接口文档
+
+---
+
+## 🧪 测试
+
+```bash
+# 运行所有测试
+python3 -m pytest tests/ -v
+
+# 运行特定测试
+python3 -m pytest tests/test_skills.py -v
 ```
 
-### 自定义规则
-编辑 `scripts/intent_detector.py` 中的 `INTENT_KEYWORDS` 添加自定义意图。
+**测试结果**: 287 passed
 
-## 📈 版本历史
+---
 
-| 版本 | 日期 | 改进 |
-|------|------|------|
-| v5.0 | 2025 | 意图识别、多 Agent 支持、一键安装 |
-| v4.0 | 2025 | AST 分析、五轴评分、STRIDE |
-| v3.0 | 2025 | 13 个操作手册、威胁建模 |
-| v2.0 | 2025 | 多语言支持、4 角色框架 |
-| v1.0 | 2025 | Python-only 初始版本 |
+## 💡 核心价值
 
-## 🔗 相关链接
+| 特性 | 说明 |
+|------|------|
+| **确定性** | 相同输入 → 相同输出，无幻觉 |
+| **零成本** | 无需 API 调用，完全离线 |
+| **可测试** | 100% 单元测试覆盖 |
+| **可扩展** | 自定义 Skill 和 Hook |
 
-- **GitHub**: https://github.com/Ryan-myp/coding
-- **本地路径**: `~/.agents/skills/code-quality-guard/`
-- **文档**: `v5-improvements.md`
+---
+
+## 📝 示例
+
+查看 `prd/eino_loop_node_prd.md` 了解 PRD 格式示例。
+
+---
 
 ## 🤝 贡献
 
 欢迎提交 Issue 和 Pull Request！
 
-## 📄 许可证
+---
+
+## 📄 License
 
 MIT License
