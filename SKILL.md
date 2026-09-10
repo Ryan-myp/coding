@@ -1,9 +1,9 @@
 ---
 name: code-quality-guard
-description: "Multi-language code quality skill that guides AI agents to generate consistent, high-quality code. Absorbs best practices and learns from successes/failures."
-version: 7.9.0
+description: "Multi-language code quality skill that guides AI agents to generate consistent, high-quality code. Includes feedback loop for continuous improvement."
+version: 7.10.0
 author: ryan
-tags: [code-quality, agent-guide, self-learning, patterns, multi-language]
+tags: [code-quality, agent-guide, self-learning, patterns, multi-language, feedback]
 metadata:
   platforms: [linux, macos, windows]
   auto-trigger: true
@@ -21,60 +21,43 @@ Different people using the same AI coding agent produce wildly different code qu
 3. **Distills** — Extract reusable patterns from good code
 4. **Absorbs** — Learn from top GitHub skills
 5. **Templates** — Pre-designed prompts for common scenarios
+6. **Feedback** — User feedback loop for continuous improvement
 
 ## Quick Start
 
 ### Analyze Code
 ```bash
-# Python
 python3 scripts/qguard-v7.py analyze src/ --language python
-
-# TypeScript
-python3 scripts/qguard-v7.py ts src/
-
-# Security
 python3 scripts/qguard-v7.py security src/
 ```
 
 ### Guide Code Generation
 ```bash
-# Prepare context before generating code
 python3 scripts/guide.py prepare --intent feature --language python
-
-# Generate enhanced prompt
-echo "# Add error handling" | python3 features/skill_absorber.py enhance --intent feature
 ```
 
 ### Learn & Improve
 ```bash
-# Record success
-python3 features/self_learn.py record-success good_code.py --tags "error-handling,type-hints"
-
-# Record failure
-python3 features/self_learn.py record-failure bad_code.py --error "Runtime error"
-
-# View stats
+python3 features/self_learn.py record-success good_code.py
+python3 features/self_learn.py record-failure bad_code.py --error "Error msg"
 python3 features/self_learn.py stats
 ```
 
-### Manage Patterns & Skills
+### Provide Feedback
 ```bash
-# Add pattern
-python3 features/enhanced_pattern_library.py add --name "Proper Error Handling" --category "error-handling"
-
-# Absorb best practices
-python3 features/skill_absorber.py absorb
-
-# View skills
-python3 scripts/qguard-v7.py skill stats
+# Record user feedback on suggestions
+python3 features/feedback_loop.py record --type confirmed --suggestion-id xxx --feedback "This fix worked!"
+python3 features/feedback_loop.py record --type rejected --suggestion-id xxx --feedback "Wrong approach"
+python3 features/feedback_loop.py stats
 ```
 
 ### Use Templates
 ```bash
 # List templates
-python3 scripts/qguard-v7.py template feature
+python3 scripts/qguard-v7.py template list
 
-# Available templates: feature, fix, review, refactor, test, security
+# Generate prompt
+echo '{"task": "...", "language": "python"}' | python3 scripts/qguard-v7.py template generate feature
 ```
 
 ## Core Scripts
@@ -82,36 +65,41 @@ python3 scripts/qguard-v7.py template feature
 | Script | Purpose |
 |--------|---------|
 | `scripts/qguard-v7.py` | Unified CLI |
-| `scripts/ast_analyzer.py` | Python AST analysis |
-| `scripts/ts/go/java/rust_analyzer.py` | Multi-language support |
-| `scripts/security_analyzer.py` | OWASP Top 10 security |
-| `scripts/fix_suggester.py` | Fix suggestions + PR desc |
+| `scripts/*_analyzer.py` | Multi-language analysis |
+| `scripts/security_analyzer.py` | OWASP security |
+| `scripts/fix_suggester.py` | Fix suggestions |
 | `scripts/guide.py` | Code generation guide |
 | `features/self_learn.py` | Self-learning engine |
-| `features/enhanced_pattern_library.py` | Pattern management |
+| `features/feedback_loop.py` | User feedback loop |
+| `features/template_customizer.py` | Template management |
 | `features/skill_absorber.py` | Absorb GitHub best practices |
 
-## Templates
+## Commands
 
-Pre-designed prompt templates for:
-- **feature** — New feature implementation
-- **fix** — Bug fix
-- **review** — Code review
-- **refactor** — Code improvement
-- **test** — Test generation
-- **security** — Security review
+```bash
+# Analysis
+qguard-v7.py analyze <path> [--language python]
+qguard-v7.py security <path>
+qguard-v7.py ts/go/java/rust <path>
 
-Plus team rules templates for Python, TypeScript, Go, Java, Rust.
+# Learning
+self_learn.py record-success|record-failure <file>
+self_learn.py stats|report
+
+# Feedback
+feedback_loop.py record --type confirmed/rejected --suggestion-id <id> --feedback "<text>"
+feedback_loop.py stats|report
+
+# Templates
+qguard-v7.py template list|get <name>
+template_customizer.py add --name <name>
+```
 
 ## Integration
 
 Works with:
-- OpenAI Codex
-- Claude
-- ChatGPT
-- GitHub Copilot
-- Pi
-- Any LLM-based code generator
+- OpenAI Codex, Claude, ChatGPT, GitHub Copilot, Pi
+- GitHub Actions, VS Code, Git hooks
 
 ## GitHub
 
