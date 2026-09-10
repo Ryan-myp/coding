@@ -1,0 +1,19 @@
+description = "Run quality gate and block merge if criteria not met"
+
+prompt = """
+Invoke the code-quality-guard skill.
+
+Run the quality gate check on the current directory:
+
+1. Calculate six-axis scores for all changed files
+2. Check against threshold (default: 70)
+3. Verify no critical findings
+4. Report pass/fail with detailed violations
+
+If gate fails:
+- List all violations
+- Explain why each blocks the merge
+- Provide specific fix recommendations
+
+Return exit code 0 for pass, 1 for fail.
+"""

@@ -1,0 +1,22 @@
+description = "Run STRIDE threat model and security audit on code"
+
+prompt = """
+Invoke the code-quality-guard skill with security focus.
+
+Perform a STRIDE threat model analysis:
+
+1. **Spoofing** — Can someone impersonate a user/service?
+2. **Tampering** — Can data be altered in transit or at rest?
+3. **Repudiation** — Can an action be denied later?
+4. **Information Disclosure** — Can data leak?
+5. **Denial of Service** — Can it be overwhelmed?
+6. **Elevation of Privilege** — Can a user gain rights they shouldn't?
+
+For each threat category:
+- Identify trust boundaries
+- List potential attack vectors
+- Recommend mitigations
+- Flag critical issues
+
+Output findings in structured format with severity levels.
+"""

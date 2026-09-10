@@ -1,0 +1,23 @@
+description = "Conduct a six-axis code review — correctness, readability, architecture, security, performance, testing"
+
+prompt = """
+Invoke the code-quality-guard skill.
+
+Review the current changes (staged or recent commits) across all six axes:
+
+1. **Correctness** — Does it match the spec? Edge cases handled? Tests adequate?
+2. **Readability** — Clear names? Straightforward logic? Well-organized?
+3. **Architecture** — Follows existing patterns? Clean boundaries? Right abstraction level?
+4. **Security** — Input validated? Secrets safe? Auth checked? (Use security-and-hardening)
+5. **Performance** — No N+1 queries? No unbounded ops? (Use performance-optimization)
+6. **Testing** — Tests written? Edge cases covered? Error paths tested?
+
+Categorize findings as:
+- **Critical** — Blocks merge (security vulnerability, data loss risk, broken functionality)
+- **Required** — Must address before merge (missing test, wrong abstraction, poor error handling)
+- **Optional** — Worth considering but not required (a simpler design, a useful refactor)
+- **Nit** — Minor and optional; the author may ignore (formatting, naming, style preferences)
+
+Output a structured review with specific file:line references and fix recommendations.
+Always include what's done well — specific praise motivates good practices.
+"""
