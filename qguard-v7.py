@@ -207,7 +207,7 @@ class QGuardV7:
 def main():
     parser = argparse.ArgumentParser(description="Code Quality Guard v7.0")
     parser.add_argument("command", choices=[
-        "analyze", "distill", "report", "intent", "threat", "evo", "trend", "context", "ts", "go", "java", "rust", "security"
+        "analyze", "distill", "report", "intent", "threat", "evo", "trend", "context", "ts", "go", "java", "rust", "security", "guide", "learn", "pattern"
     ])
     parser.add_argument("target", nargs="?", default=".")
     parser.add_argument("--intent", help="Specify intent")
