@@ -22,15 +22,15 @@ class CodeQualityIntegration:
     
     def _find_skill_path(self) -> Optional[str]:
         """查找 skill 路径"""
-        # 检查几个可能的位置
+        # 直接指定已知路径
         paths = [
-            Path("/Users/yanping.ma/.agents/skills/code-quality-guard"),
-            Path.home() / ".agents/skills/code-quality-guard",
-            Path(__file__).parent.parent.parent / "code-quality-guard",
+            "/Users/yanping.ma/.agents/skills/code-quality-guard",
+            str(Path.home() / ".agents/skills/code-quality-guard"),
         ]
         for p in paths:
-            if p.exists() and (p / "scripts" / "qguard-v7.py").exists():
-                return str(p)
+            p_path = Path(p)
+            if p_path.exists() and (p_path / "scripts" / "qguard-v7.py").exists():
+                return p
         return None
     
     def analyze_file(self, filepath: str, language: str = "python") -> Dict:
