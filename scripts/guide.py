@@ -125,7 +125,14 @@ class CodeGenerationGuide:
         files = list(self.project_dir.glob("*"))
         
         for f in files:
-            content = f.read_text()[:1000] if f.is_file() else ""
+            try:
+                if f.is_file() and f.suffix in ['.py', '.ts', '.js', '.go']:
+                    content = f.read_text(encoding="utf-8", errors="ignore")[:1000]
+                else:
+                    continue
+            except:
+                continue
+            
             if 'flask' in content.lower():
                 return "flask"
             if 'django' in content.lower():
@@ -284,7 +291,7 @@ class CodeGenerationGuide:
         # 统计指标
         patterns["metrics"] = {
             "lines": len([l for l in lines if l.strip()]),
-            "functions": len(re.findall(r'def\s+\w+', source_code)) if self.context.language == "python" else 0,
+            "functions": len(re.findall(r'def\s+\w+', source_code)),
             "classes": len(re.findall(r'class\s+\w+', source_code)),
         }
         
