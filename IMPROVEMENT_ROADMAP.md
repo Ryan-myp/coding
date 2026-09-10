@@ -1,54 +1,78 @@
-# Code Quality Guard — Improvement Roadmap
+# Code Quality Guard — Improvement Roadmap (Honest)
 
 ## Current State (v7.0)
-- Script collection with basic automation
-- biz-delivery integration (unique differentiator)
-- Multi-agent support
-- No true AI/ML capabilities
 
-## Next Iterations (Realistic)
+### Working Well
+- Intent Detection (6 types, Chinese/English)
+- Six-axis Scoring (correctness/readability/architecture/security/performance/accessibility)
+- AST-based Python Analysis
+- STRIDE Threat Model (basic)
+- Multi-agent support (Pi/Claude/Codex/Cursor/Copilot)
 
-### v7.1 — Stabilize biz-delivery (1 week)
-- [ ] Connect to actual PRD templates
-- [ ] Add real quality checkpoints from requirements
-- [ ] Improve pre-merge gate with actual scoring
-- [ ] Add test coverage for integrations
+### Framework-Level (Needs Real Implementation)
+- Pattern Detection (keyword matching only)
+- Health Tracking (score history, no prediction)
+- Context Detection (file type analysis only)
+- Failure Tracking (JSON recording, no learning)
 
-### v7.2 — Improve Intent Detection (2 weeks)
-- [ ] Add more training samples
-- [ ] Support additional languages
-- [ ] Add confidence calibration
-- [ ] Benchmark against manual classification
+### Not Implemented
+- True AI Learning
+- Self-improvement
+- MITRE ATT&CK AI inference
 
-### v7.3 — Build Pattern Library (2 weeks)
-- [ ] Scan team codebase for patterns
-- [ ] Create searchable index
-- [ ] Add pattern quality scoring
-- [ ] Document patterns with examples
+## Next Iterations (Realistic & Practical)
 
-### v7.4 — Add Feedback Loop (1 week)
-- [ ] Record user-confirmed fixes
-- [ ] Track high-frequency issues
-- [ ] Generate weekly quality reports
-- [ ] No "learning" — just statistics
+### v7.1 — Improve Core Scoring (This Week)
+- [ ] Add TypeScript AST parser (currently only Python)
+- [ ] Improve scoring weights based on project type
+- [ ] Add language-specific checklists
+- [ ] Benchmark accuracy against manual review
 
-### v7.5 — Enhance Context Awareness (2 weeks)
-- [ ] Parse project configs (package.json, go.mod, etc.)
-- [ ] Understand tech stack dependencies
-- [ ] Adjust check focus based on stack
-- [ ] Generate tailored recommendations
+### v7.2 — Expand Language Support (2 Weeks)
+- [ ] TypeScript/JavaScript parser
+- [ ] Go parser
+- [ ] Java parser
+- [ ] Rust parser
+- [ ] Universal pattern detection (language-agnostic)
 
-## Out of Scope (Not Doing)
-- ❌ Claiming "AI learning" without real ML
-- ❌ Building "evolutionary" systems without feedback
-- ❌ Creating "intelligent" systems that are just scripts
-- ❌ Comparing to obra/superpowers (we're not there)
+### v7.3 — Better Security Analysis (2 Weeks)
+- [ ] OWASP Top 10 coverage
+- [ ] Real CVE database integration
+- [ ] Dependency vulnerability scanning
+- [ ] Sensitive data detection (API keys, passwords)
+
+### v7.4 — Actionable Reports (1 Week)
+- [ ] Generate fix suggestions with code examples
+- [ ] Create PR-ready descriptions
+- [ ] Prioritize findings by impact
+- [ ] Export to standard formats (JSON, SARIF)
+
+### v7.5 — CI/CD Integration (1 Week)
+- [ ] GitHub Actions workflow
+- [ ] GitLab CI template
+- [ ] Jenkins pipeline example
+- [ ] Quality gate configuration
 
 ## Success Metrics
-- biz-delivery integration used in 3+ projects
-- Intent detection accuracy > 80%
-- Pattern library with 50+ documented patterns
-- Zero exaggerated claims in documentation
+
+- [ ] Support 5+ programming languages
+- [ ] OWASP Top 10 coverage
+- [ ] < 5% false positive rate
+- [ ] CI/CD integration working
+- [ ] Zero exaggerated claims in docs
+
+## What We Won't Claim
+
+- ❌ "AI-powered" (unless we use actual ML)
+- ❌ "Self-learning" (unless there's a feedback loop)
+- ❌ "Intelligent" (unless there's real understanding)
+- ❌ "Evolutionary" (unless there's actual evolution)
+
+## Honest Value Proposition
+
+**We are**: A practical, multi-language code quality toolkit with consistent scoring and security analysis.
+
+**We are not**: An AI system, a learning platform, or a replacement for human code review.
 
 ---
 Last updated: 2026-09-10
