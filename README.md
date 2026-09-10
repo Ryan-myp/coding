@@ -123,7 +123,6 @@ code-quality-guard/
 ├── policies/
 │   └── gate.json                # 门禁配置
 ├── integrations/
-│   └── biz-delivery/            # biz-delivery 集成
 └── distillation/                # 蒸馏结果
     ├── patterns.json
     └── history.jsonl
