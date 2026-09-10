@@ -29,7 +29,7 @@ class CodeQualityIntegration:
         ]
         for p in paths:
             p_path = Path(p)
-            if p_path.exists() and (p_path / "scripts" / "qguard-v7.py").exists():
+            if p_path.exists() and (p_path / "scripts" / "qguard.py").exists():
                 return p
         return None
     
@@ -39,7 +39,7 @@ class CodeQualityIntegration:
             return {"error": "code-quality-guard skill not found"}
         
         cmd = [
-            "python3", str(self.scripts_dir / "qguard-v7.py"),
+            "python3", str(self.scripts_dir / "qguard.py"),
             "analyze", filepath, "--language", language, "--json"
         ]
         
@@ -58,7 +58,7 @@ class CodeQualityIntegration:
             return {"error": "code-quality-guard skill not found"}
         
         cmd = [
-            "python3", str(self.scripts_dir / "qguard-v7.py"),
+            "python3", str(self.scripts_dir / "qguard.py"),
             "analyze", dirpath, "--language", language, "--json"
         ]
         
@@ -77,7 +77,7 @@ class CodeQualityIntegration:
             return {"error": "code-quality-guard skill not found"}
         
         cmd = [
-            "python3", str(self.scripts_dir / "qguard-v7.py"),
+            "python3", str(self.scripts_dir / "qguard.py"),
             "security", path, "--json"
         ]
         
@@ -169,7 +169,7 @@ class CodeQualityIntegration:
             return "Skill not available"
         
         cmd = [
-            "python3", str(self.scripts_dir / "qguard-v7.py"),
+            "python3", str(self.scripts_dir / "qguard.py"),
             "report", filepath
         ]
         
