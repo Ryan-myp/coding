@@ -24,7 +24,7 @@ class CodeQualityIntegration:
         """查找 skill 路径"""
         # 检查几个可能的位置
         paths = [
-            "/Users/yanping.ma/.agents/skills/code-quality-guard",
+            Path("/Users/yanping.ma/.agents/skills/code-quality-guard"),
             Path.home() / ".agents/skills/code-quality-guard",
             Path(__file__).parent.parent.parent / "code-quality-guard",
         ]
