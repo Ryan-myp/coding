@@ -15,8 +15,8 @@ from dataclasses import dataclass, field
 class SkillPattern:
     """技能模式"""
     name: str
-    source: str  # GitHub repo or skill name
-    category: str  # prompt-engineering, workflow, reflection
+    source: str
+    category: str
     description: str
     implementation: str
     quality_score: float = 0.0
@@ -42,21 +42,17 @@ class SkillAbsorber:
         self.patterns = self._load_absorbed()
     
     def _load_absorbed(self) -> List[Dict]:
-        """加载已吸收的模式"""
         if self.absorbed_file.exists():
             with open(self.absorbed_file) as f:
                 return json.load(f)
         return []
     
     def _save_absorbed(self):
-        """保存吸收的模式"""
         with open(self.absorbed_file, 'w') as f:
             json.dump(self.patterns, f, indent=2)
     
     def absorb_from_github(self, repo_url: str, patterns: List[Dict]) -> List[SkillPattern]:
-        """从 GitHub 吸收模式"""
         absorbed = []
-        
         for pattern in patterns:
             skill = SkillPattern(
                 name=pattern.get("name", "unknown"),
@@ -66,18 +62,13 @@ class SkillAbsorber:
                 implementation=pattern.get("implementation", ""),
                 quality_score=pattern.get("score", 80.0)
             )
-            
-            # 检查是否已存在
-            existing = self._find_pattern(skill.name)
-            if not existing:
+            if not self._find_pattern(skill.name):
                 self.patterns.append(skill.to_dict())
                 absorbed.append(skill)
-        
         self._save_absorbed()
         return absorbed
     
     def _find_pattern(self, name: str) -> Dict:
-        """查找已有模式"""
         for p in self.patterns:
             if p.get("name") == name:
                 return p
@@ -86,14 +77,13 @@ class SkillAbsorber:
     def absorb_common_patterns(self) -> List[SkillPattern]:
         """吸收常见最佳实践"""
         patterns = [
-            # Prompt Engineering
+            # Prompt Engineering (from addyosmani/agent-skills)
             SkillPattern(
                 name="Role Prompting",
                 source="multiple-agents",
                 category="prompt-engineering",
                 description="Assign a specific role/persona to the agent",
-                implementation="""You are an expert software architect with 20 years of experience.
-Your task is to review code for architecture quality.""",
+                implementation="You are an expert software architect with 20 years of experience.",
                 quality_score=95.0
             ),
             SkillPattern(
@@ -101,11 +91,7 @@ Your task is to review code for architecture quality.""",
                 source="multiple-agents",
                 category="prompt-engineering",
                 description="Ask agent to think step by step",
-                implementation="""Let's think step by step:
-1. First, understand the problem
-2. Then, identify constraints
-3. Next, design the solution
-4. Finally, implement and verify""",
+                implementation="Let's think step by step: 1. Understand 2. Design 3. Implement 4. Verify",
                 quality_score=90.0
             ),
             SkillPattern(
@@ -113,24 +99,16 @@ Your task is to review code for architecture quality.""",
                 source="multiple-agents",
                 category="prompt-engineering",
                 description="Generate multiple solutions and compare",
-                implementation="""Generate 3 different solutions to this problem.
-Then compare them and choose the best one.""",
+                implementation="Generate 3 different solutions. Then compare and choose the best.",
                 quality_score=88.0
             ),
-            # Workflow
+            # Workflow (from superpowers)
             SkillPattern(
                 name="Plan-Execute-Review",
                 source="superpowers",
                 category="workflow",
                 description="Three-phase development workflow",
-                implementation="""## Phase 1: Plan
-Write a detailed plan before coding.
-
-## Phase 2: Execute
-Implement according to the plan.
-
-## Phase 3: Review
-Review and improve the result.""",
+                implementation="## Phase 1: Plan\n## Phase 2: Execute\n## Phase 3: Review",
                 quality_score=92.0
             ),
             SkillPattern(
@@ -138,36 +116,25 @@ Review and improve the result.""",
                 source="superpowers",
                 category="workflow",
                 description="Agent reflects on its own work",
-                implementation="""After completing a task, reflect:
-- What went well?
-- What could be improved?
-- What did I learn?""",
+                implementation="After completing a task, reflect: What went well? What could improve?",
                 quality_score=85.0
             ),
-            # Context Engineering
+            # Context Engineering (from open-code)
             SkillPattern(
                 name="Context Windows",
                 source="open-code",
                 category="context-engineering",
                 description="Optimize context window usage",
-                implementation="""Use structured context injection:
-1. Project overview (1 paragraph)
-2. Key files (list)
-3. Current task (specific)
-4. Constraints (clear)""",
+                implementation="Use structured context: 1. Project overview 2. Key files 3. Current task 4. Constraints",
                 quality_score=87.0
             ),
-            # Safety
+            # Safety (from cline)
             SkillPattern(
                 name="Guardrails",
-                source="cliner",
+                source="cline",
                 category="safety",
                 description="Set boundaries for agent behavior",
-                implementation="""Rules:
-- Never modify files outside src/
-- Always run tests before commit
-- Never hardcode secrets
-- Ask for clarification when uncertain""",
+                implementation="Rules: Never modify outside src/. Always run tests. Never hardcode secrets.",
                 quality_score=90.0
             ),
             # Feedback
@@ -176,20 +143,82 @@ Review and improve the result.""",
                 source="multiple-agents",
                 category="feedback",
                 description="Continuous improvement through feedback",
-                implementation="""User feedback collected:
-{feedback}
-
-Improvements made:
-1. {change1}
-2. {change2}""",
+                implementation="User feedback: {feedback}\nImprovements: 1. {change1} 2. {change2}",
+                quality_score=83.0
+            ),
+            # From alirezarezvani/claude-skills
+            SkillPattern(
+                name="Expert Persona",
+                source="claude-skills",
+                category="prompt-engineering",
+                description="Adopt expert persona for domain-specific tasks",
+                implementation="Act as a {domain} expert. Your task is to {task}. Consider {constraints}.",
+                quality_score=91.0
+            ),
+            SkillPattern(
+                name="Few-Shot Examples",
+                source="claude-skills",
+                category="prompt-engineering",
+                description="Provide examples for better understanding",
+                implementation="Here are some examples:\nExample 1: ...\nExample 2: ...\nNow do: ...",
+                quality_score=89.0
+            ),
+            # From addyosmani/agent-skills
+            SkillPattern(
+                name="Decomposition",
+                source="agent-skills",
+                category="workflow",
+                description="Break complex tasks into smaller steps",
+                implementation="Break this task into sub-tasks: 1. {step1} 2. {step2} 3. {step3}",
+                quality_score=86.0
+            ),
+            SkillPattern(
+                name="Tool Selection",
+                source="agent-skills",
+                category="workflow",
+                description="Choose appropriate tools for each step",
+                implementation="For each sub-task, select the best tool: read/write/bash/exec",
+                quality_score=84.0
+            ),
+            # Security patterns
+            SkillPattern(
+                name="Defense in Depth",
+                source="security-patterns",
+                category="security",
+                description="Multiple layers of security controls",
+                implementation="Apply security at: input validation, auth, authorization, encryption, logging",
+                quality_score=93.0
+            ),
+            SkillPattern(
+                name="Least Privilege",
+                source="security-patterns",
+                category="security",
+                description="Minimal permissions required",
+                implementation="Grant only necessary permissions. Review and revoke regularly.",
+                quality_score=92.0
+            ),
+            # Performance patterns
+            SkillPattern(
+                name="Lazy Loading",
+                source="performance-patterns",
+                category="performance",
+                description="Load resources only when needed",
+                implementation="Defer initialization until first use. Cache results where appropriate.",
+                quality_score=85.0
+            ),
+            SkillPattern(
+                name="Batch Processing",
+                source="performance-patterns",
+                category="performance",
+                description="Process items in batches",
+                implementation="Group operations into batches. Process in parallel where possible.",
                 quality_score=83.0
             ),
         ]
         
         absorbed = []
         for pattern in patterns:
-            existing = self._find_pattern(pattern.name)
-            if not existing:
+            if not self._find_pattern(pattern.name):
                 self.patterns.append(pattern.to_dict())
                 absorbed.append(pattern)
         
@@ -218,7 +247,6 @@ Improvements made:
         return enhanced
     
     def _get_role(self, intent: str) -> str:
-        """获取角色设定"""
         roles = {
             "feature": "You are a senior software engineer specializing in feature development.",
             "fix": "You are a bug fix specialist with expertise in debugging and root cause analysis.",
@@ -229,7 +257,6 @@ Improvements made:
         return roles.get(intent, "You are an expert software engineer.")
     
     def _get_steps(self, intent: str) -> str:
-        """获取思考步骤"""
         steps = {
             "feature": """
 Think step by step:
@@ -267,7 +294,6 @@ Think step by step:
         return steps.get(intent, "Think through each step carefully.")
     
     def _get_rules(self, intent: str) -> str:
-        """获取约束规则"""
         return """
 Rules:
 - Follow language-specific best practices
@@ -278,7 +304,6 @@ Rules:
 - Document public APIs"""
     
     def get_absorbed_stats(self) -> Dict:
-        """获取吸收统计"""
         categories = {}
         for p in self.patterns:
             cat = p.get("category", "unknown")
@@ -291,7 +316,6 @@ Rules:
         }
     
     def generate_report(self) -> str:
-        """生成吸收报告"""
         stats = self.get_absorbed_stats()
         
         report = f"""# Skill Absorption Report
@@ -318,24 +342,21 @@ Rules:
 def main():
     import argparse
     parser = argparse.ArgumentParser(description="Skill Absorber")
-    parser.add_argument("command", choices=["absorb", "generate", "enhance", "stats"])
+    parser.add_argument("command", choices=["absorb", "generate", "enhance", "stats", "report"])
     parser.add_argument("target", nargs="?", default=".")
     parser.add_argument("--intent", help="Intent type")
-    parser.add_argument("--repo", help="GitHub repo URL")
     parser.add_argument("--json", action="store_true")
     args = parser.parse_args()
     
     absorber = SkillAbsorber(args.target)
     
     if args.command == "absorb":
-        # 吸收常见模式
         patterns = absorber.absorb_common_patterns()
         print(f"Absorbed {len(patterns)} new patterns")
         for p in patterns:
-            print(f"  - {p.name} ({p.category})")
+            print(f"  - {p.name} ({p.category}) - {p.quality_score:.0f}/100")
     
     elif args.command == "generate":
-        # 生成增强 prompt
         if not args.intent:
             print("Please provide --intent")
             return
@@ -351,9 +372,8 @@ def main():
             print(f"Total patterns: {stats['total_patterns']}")
             print(f"Average score: {stats['average_score']:.1f}")
     
-    elif args.command == "enhance":
-        report = absorber.generate_report()
-        print(report)
+    elif args.command == "report":
+        print(absorber.generate_report())
 
 
 if __name__ == "__main__":
