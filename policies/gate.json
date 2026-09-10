@@ -1,0 +1,33 @@
+{
+  "version": "4.0.0",
+  "quality_gate": {
+    "min_composite_score": 70,
+    "min_axis_scores": {
+      "correctness": 15,
+      "readability": 15,
+      "architecture": 18,
+      "security": 15,
+      "performance": 10
+    },
+    "max_critical_issues": 0,
+    "max_warning_issues": 5,
+    "required_axes": ["correctness", "security"],
+    "distillation_candidate_threshold": 90
+  },
+  "ci_integration": {
+    "block_merge_on_failure": true,
+    "comment_on_pr": true,
+    "schedule_full_scan": "0 2 * * 1",
+    "max_files_per_scan": 100
+  },
+  "distillation": {
+    "auto_extract_patterns": true,
+    "min_score_for_distillation": 90,
+    "output_dir": "distillation"
+  },
+  "biz_delivery_integration": {
+    "td_phase_check": true,
+    "pre_merge_check": true,
+    "test_quality_gate": true
+  }
+}
