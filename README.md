@@ -1,91 +1,174 @@
-# Coding — Ryan's Coding Excellence System
+# Code Quality Guard v5.0 — 多语言 AI 代码质量守护系统
 
-工业级编码质量守护体系，包含以下核心能力：
+一个跨平台的代码质量守护工具，支持意图识别、五轴评分、STRIDE 威胁建模和设计模式蒸馏。
 
-## 📦 核心组件
+## 🚀 快速开始
 
-### `code-quality-guard/` — AI 代码质量守护专家
-基于五轴评分 × 四角色评估的工业级代码审查系统。
+### 在 Pi 中使用
 
-**特性：**
-- **五轴评分** — Correctness(20%) | Readability(20%) | Architecture(25%) | Security(20%) | Performance(15%)
-- **四角色评估** — Architect + Engineer + Security + Performer
-- **多语言支持** — Python / TypeScript / Go / Java / Rust
-- **蒸馏进化** — 从高质量代码中提取模式，持续优化检查清单
-- **12 个 Playbook** — TDD、威胁建模、API 设计、重构、迁移、可观测性等
-- **Git 预提交门禁** — 自动拦截硬编码密钥、SQL 注入风险
+```
+/quality-check          # 运行质量门禁
+/quality-review src/    # 五轴评分审查
+/threat-model           # STRIDE 威胁建模
+/learn-patterns         # 从项目学习最佳实践
+/intent-detect "你的prompt"  # 测试意图检测
+```
 
-**快速开始：**
+### 在终端使用
+
 ```bash
-# 审查代码
-python3 scripts/distill.py src/ --max-files 50
+# 智能触发
+bash scripts/qguard-auto.sh trigger "实现用户认证API"
+
+# 意图检测
+python3 scripts/intent_detector.py "实现用户认证API" --verbose
 
 # 五轴评分
-python3 scripts/score.py src/service/payment.py
+python3 scripts/qguard.py review src/
 
 # 威胁建模
-python3 scripts/threat_model.py src/api/ --output threats.md
+python3 scripts/qguard.py threats src/ --json
 
 # 质量门禁
-python3 scripts/gate_checker.py review_results.json
+python3 scripts/qguard.py gate . --min-score 70
+
+# 模式蒸馏
+python3 scripts/qguard.py distill . --output patterns.json
 ```
 
-## 安装
+## 🎯 核心特性
 
+### 1. 智能意图识别
+- 支持中英双语
+- 检测 6 种意图：代码编写、代码审查、安全审查、调试修复、重构优化、测试
+- 自动注入对应的质量规则
+
+### 2. 五轴评分系统
+| 维度 | 权重 | 关注点 | 最低分 |
+|------|------|--------|--------|
+| Correctness | 20% | 错误处理、边界条件 | 15/20 |
+| Readability | 20% | 命名、函数长度 | 15/20 |
+| Architecture | 25% | 分层、耦合、上帝类 | 18/25 |
+| Security | 20% | 密钥、注入、认证 | 15/20 |
+| Performance | 15% | N+1查询、超时 | 10/15 |
+
+### 3. 实时质量守护
+- 代码写入时弹出提醒
+- Git commit 前自动运行门禁
+- PR/Merge 时自动检查
+
+### 4. 多 Agent 支持
+- Pi (当前环境)
+- Claude Code
+- OpenAI Codex
+- Cursor
+- GitHub Copilot
+
+### 5. 学习进化
+- 从高质量代码中学习设计模式
+- 记录蒸馏历史
+- 持续优化规则
+
+## 📦 安装
+
+### 一键安装所有 Agent
 ```bash
-# 安装到 pi (agents)
-ln -s /path/to/code-quality-guard ~/.agents/skills/code-quality-guard
-
-# 安装到 Claude Code
-npx skills add Ryan-myp/coding --skill code-quality-guard
+bash scripts/install_all_agents.sh
 ```
 
-## 目录结构
+### 手动安装
+```bash
+# Pi
+cp ~/.agents/skills/code-quality-guard/scripts/qguard-auto.sh ~/.local/bin/
+
+# Claude Code
+mkdir -p ~/.claude/skills/code-quality-guard
+cp ~/.agents/skills/code-quality-guard/SKILL.md ~/.claude/skills/code-quality-guard/
+
+# Codex
+mkdir -p ~/.codex/skills/code-quality-guard
+cp ~/.agents/skills/code-quality-guard/SKILL.md ~/.codex/skills/code-quality-guard/
+
+# Cursor
+mkdir -p ~/.cursor/rules
+cp ~/.agents/skills/code-quality-guard/references/quality-rules.md ~/.cursor/rules/code-quality-guard.md
+```
+
+## 📊 文件结构
 
 ```
 code-quality-guard/
-├── SKILL.md                      # 主入口
-├── playbooks/                    # 12 个操作手册
-│   ├── tdd-workflow.md
-│   ├── threat-modeling.md
-│   ├── api-design.md
-│   ├── refactoring.md
-│   ├── code-review.md
-│   ├── observability.md
-│   ├── migration.md
-│   ├── legacy-code.md
-│   ├── deployment-strategy.md
-│   ├── incident-response.md
-│   ├── performance-profile.md
-│   └── distillation.md
-├── references/
-│   ├── patterns/                 # 设计模式库
-│   ├── anti-patterns/            # 反模式库
-│   ├── languages/                # 语言专项检查清单
-│   ├── guides/                   # 工业级指南
-│   └── schemas/                  # JSON Schema
-├── scripts/                      # Python 工具集
-│   ├── distill.py                # 蒸馏引擎
-│   ├── score.py                  # 五轴评分
-│   ├── report.py                 # 报告生成
-│   ├── threat_model.py           # STRIDE 威胁建模
-│   ├── diff_analyzer.py          # Diff 影响分析
-│   └── gate_checker.py           # 质量门禁
-├── templates/                    # ADR / RFC 模板
-└── hooks/                        # Git 预提交钩子
+├── README.md                    # 本文件
+├── v5-improvements.md           # v5 改进说明
+├── AUTO_TRIGGER_GUIDE.md        # 自动触发指南
+├── SKILL.md                     # 主技能文档
+├── scripts/
+│   ├── qguard.py                # 统一 CLI
+│   ├── qguard-auto.sh           # 智能触发脚本
+│   ├── intent_detector.py       # 意图检测器
+│   ├── install_all_agents.sh    # 一键安装脚本
+│   ├── ast_analyzer.py          # AST 分析器
+│   ├── score_engine.py          # 五轴评分引擎
+│   ├── threat_modeler.py        # STRIDE 威胁建模
+│   ├── distiller.py             # 模式蒸馏器
+│   ├── metrics_dashboard.py     # 质量趋势仪表板
+│   └── badge_generator.py       # 徽章生成器
+├── playbooks/                   # 操作手册
+│   ├── tdd.sh                   # TDD 工作流
+│   ├── review.sh                # 代码审查流程
+│   ├── threat-model.sh          # 威胁建模
+│   └── migrate.sh               # 迁移安全
+├── ci/
+│   └── quality-check.yml        # GitHub Actions
+├── policies/
+│   └── gate.json                # 门禁配置
+├── integrations/
+│   └── biz-delivery/            # biz-delivery 集成
+└── distillation/                # 蒸馏结果
+    ├── patterns.json
+    └── history.jsonl
 ```
 
-## 质量门禁
+## 🔧 配置
 
-| 分数 | 等级 | 门禁结果 |
-|------|------|---------|
-| 90-100 | Excellent 🟢 | 自动通过 + 蒸馏候选 |
-| 70-89 | Good 🟡 | 条件通过 |
-| 50-69 | Fair 🟠 | 必须修复 Critical |
-| 0-49 | Poor 🔴 | 驳回重写 |
+### 质量门禁阈值
+编辑 `policies/gate.json`:
+```json
+{
+  "quality_gate": {
+    "min_composite_score": 70,
+    "min_axis_scores": {
+      "security": 15,
+      "architecture": 18
+    },
+    "critical_findings": ["hardcoded_secret", "sql_injection", "eval_usage"]
+  }
+}
+```
 
-## 技术栈
+### 自定义规则
+编辑 `scripts/intent_detector.py` 中的 `INTENT_KEYWORDS` 添加自定义意图。
 
-- Python 3.8+ (无外部依赖)
-- 支持 AGENTS.md / SKILL.md 规范的 Agent 平台
-- CI/CD 集成（GitHub Actions / GitLab CI）
+## 📈 版本历史
+
+| 版本 | 日期 | 改进 |
+|------|------|------|
+| v5.0 | 2025 | 意图识别、多 Agent 支持、一键安装 |
+| v4.0 | 2025 | AST 分析、五轴评分、STRIDE |
+| v3.0 | 2025 | 13 个操作手册、威胁建模 |
+| v2.0 | 2025 | 多语言支持、4 角色框架 |
+| v1.0 | 2025 | Python-only 初始版本 |
+
+## 🔗 相关链接
+
+- **GitHub**: https://github.com/Ryan-myp/coding
+- **本地路径**: `~/.agents/skills/code-quality-guard/`
+- **文档**: `v5-improvements.md`
+
+## 🤝 贡献
+
+欢迎提交 Issue 和 Pull Request！
+
+## 📄 许可证
+
+MIT License
